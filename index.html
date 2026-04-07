@@ -130,11 +130,26 @@ select option { background: #161b27; }
   display: inline-block;
 }
 
+/* 상품명 (흰카드 상단) */
+.el-pname {
+  position: absolute;
+  top: 14.8%; left: 6%; right: 6%; height: 7%;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 6;
+}
+.el-pname span {
+  font-size: clamp(11px, 3.2vw, 26px);
+  font-weight: 700; color: #2F006D;
+  text-align: center; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+  max-width: 100%;
+}
+
 /* 상품 이미지 (흰카드 내부) */
 .el-product {
   position: absolute;
-  top: 14.8%; left: 6%;
-  width: 87.9%; height: 58.7%;  /* 흰카드: left=6% right=93.9% top=14.8% bottom=73.5% */
+  top: 22%; left: 6%;
+  width: 87.9%; height: 51.5%;  /* 흰카드: left=6% right=93.9% top=22% bottom=73.5% */
   display: flex; align-items: center; justify-content: center;
   z-index: 5;
 }
@@ -142,7 +157,6 @@ select option { background: #161b27; }
   max-width: 100%; max-height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 4px 16px rgba(0,0,0,.12));
-  display: none;
 }
 .el-product .ph {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
@@ -241,6 +255,11 @@ select option { background: #161b27; }
   </div>
 
   <div class="sec">
+    <div class="sec-lbl">상품명</div>
+    <input type="text" id="i-name" placeholder="상품명을 입력하세요" oninput="render()">
+  </div>
+
+  <div class="sec">
     <div class="sec-lbl">상품 이미지</div>
     <div class="upload" id="upload-box" onclick="document.getElementById('i-img').click()">
       <input type="file" id="i-img" accept="image/*"
@@ -280,6 +299,10 @@ select option { background: #161b27; }
 
     <div class="el-title">
       <span id="el-title">유통기한 임박 SALE</span>
+    </div>
+
+    <div class="el-pname" id="el-pname-wrap">
+      <span id="el-pname"></span>
     </div>
 
     <div class="el-product" id="el-product">
@@ -396,10 +419,14 @@ function render() {
     show(document.getElementById('disc-auto'), false);
   }
 
+  const pname = document.getElementById('i-name').value.trim();
+  document.getElementById('el-pname').textContent = pname;
+  show(document.getElementById('el-pname-wrap'), pname !== '');
+
   const elImg = document.getElementById('el-img');
   const elPh  = document.getElementById('el-ph');
-  if (imgSrc) { elImg.src = imgSrc; show(elImg, true); show(elPh, false); }
-  else { show(elImg, false); show(elPh, true); }
+  if (imgSrc) { elImg.src = imgSrc; elImg.style.display = 'block'; show(elPh, false); }
+  else { elImg.style.display = 'none'; show(elPh, true); }
 }
 
 function loadImg(e) {
