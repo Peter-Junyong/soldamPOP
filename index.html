@@ -363,6 +363,7 @@ function changeESL() {
   pop.style.height = dispH + 'px';
   document.getElementById('esl-info').textContent = '출력 해상도: ' + label;
   render();
+  updatePnamePosition();
 }
 
 function getDisc() {
@@ -428,8 +429,36 @@ function render() {
 
   const elImg = document.getElementById('el-img');
   const elPh  = document.getElementById('el-ph');
-  if (imgSrc) { elImg.src = imgSrc; elImg.style.display = 'block'; show(elPh, false); }
-  else { elImg.style.display = 'none'; show(elPh, true); }
+  if (imgSrc) {
+    elImg.onload = () => updatePnamePosition();
+    elImg.src = imgSrc;
+    elImg.style.display = 'block';
+    show(elPh, false);
+    if (elImg.complete && elImg.naturalWidth) updatePnamePosition();
+  } else {
+    elImg.style.display = 'none';
+    show(elPh, true);
+  }
+}
+
+function updatePnamePosition() {
+  const elImg    = document.getElementById('el-img');
+  const elProduct = document.getElementById('el-product');
+  const elPnameWrap = document.getElementById('el-pname-wrap');
+  if (!imgSrc || !elImg.naturalWidth || !elImg.naturalHeight) return;
+
+  const cW = elProduct.offsetWidth;
+  const cH = elProduct.offsetHeight;
+  const cTop = elProduct.offsetTop;
+  const imgRatio = elImg.naturalWidth / elImg.naturalHeight;
+  const containerRatio = cW / cH;
+
+  // object-fit: contain 기준 실제 렌더링 높이 계산
+  const renderedH = imgRatio >= containerRatio ? cW / imgRatio : cH;
+
+  // 이미지는 컨테이너 내 수직 중앙 정렬
+  const imgBottom = cTop + (cH + renderedH) / 2;
+  elPnameWrap.style.top = (imgBottom + 20) + 'px';
 }
 
 function loadImg(e) {
@@ -453,6 +482,7 @@ function clearImg(e) {
   show(document.getElementById('prev-img'), false);
   show(document.getElementById('upload-ph'), true);
   show(document.getElementById('btn-clr'), false);
+  document.getElementById('el-pname-wrap').style.top = '';
   render();
 }
 
@@ -477,7 +507,7 @@ async function dlPNG() {
 }
 
 changeESL();  // 초기 사이즈 설정
-window.addEventListener('resize', () => { changeESL(); adjustTitleFont(); });
+window.addEventListener('resize', () => { changeESL(); adjustTitleFont(); updatePnamePosition(); });
 </script>
 </body>
 </html>
