@@ -147,7 +147,7 @@ select option { background: #161b27; }
 
 /* 13.3" 전용 이미지 박스 */
 #pop[data-esl="13"] .el-product {
-  width: 52%;
+  width: 58%;
   top: 14%;
 }
 
@@ -156,7 +156,7 @@ select option { background: #161b27; }
   position: absolute;
   top: 17%; left: 50%;
   transform: translateX(-50%);
-  width: 62%;
+  width: 70%;
   aspect-ratio: 1 / 1;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
@@ -477,7 +477,7 @@ function updatePnamePosition() {
   // 이미지는 컨테이너 내 수직 중앙 정렬
   const imgBottom = cTop + (cH + renderedH) / 2;
   const eslKey = document.getElementById('i-esl').value;
-  const offset = eslKey === '13' ? -32 : -12;
+  const offset = eslKey === '13' ? -8 : -12;
   elPnameWrap.style.top = (imgBottom + offset) + 'px';
 }
 
