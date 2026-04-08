@@ -374,12 +374,10 @@ function getDisc() {
   return (s > 0 && o > s) ? Math.round((1 - s/o)*100) : null;
 }
 
-function adjustTitleFont() {
+function adjustTitleFont(targetSize) {
   const span = document.getElementById('el-title');
   const container = span.closest('.el-title');
-  // 기본 폰트 리셋
-  span.style.fontSize = '';
-  // 컨테이너 너비보다 텍스트가 넓으면 축소
+  span.style.fontSize = targetSize || '';
   const maxW = container.offsetWidth * 0.96;
   let size = parseFloat(getComputedStyle(span).fontSize);
   while (span.scrollWidth > maxW && size > 10) {
@@ -399,15 +397,14 @@ function render() {
   if (isLeftBig) {
     titleWrap.style.justifyContent = 'flex-start';
     titleWrap.style.paddingLeft = '6%';
-    titleEl.style.fontSize = 'clamp(54px, 18vw, 144px)';
     titleEl.style.textAlign = 'left';
+    adjustTitleFont('clamp(76px, 24vw, 192px)');
   } else {
     titleWrap.style.justifyContent = '';
     titleWrap.style.paddingLeft = '';
     titleEl.style.textAlign = '';
-    titleEl.style.fontSize = promo === '유통기한 임박 SALE' ? '' : 'clamp(18px, 5.8vw, 46px)';
+    adjustTitleFont(promo === '유통기한 임박 SALE' ? '' : 'clamp(18px, 5.8vw, 46px)');
   }
-  adjustTitleFont();
 
   const s = document.getElementById('i-sale').value;
   document.getElementById('el-price').textContent = s ? fmt(s) : '—';
