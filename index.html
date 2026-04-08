@@ -133,7 +133,7 @@ select option { background: #161b27; }
 /* 상품명 (이미지 하단) */
 .el-pname {
   position: absolute;
-  top: 55%; left: 6%; right: 6%; height: 7%;
+  top: 53%; left: 6%; right: 6%; height: 7%;
   display: flex; align-items: center; justify-content: center;
   z-index: 6;
 }
@@ -468,7 +468,7 @@ function updatePnamePosition() {
 
   // 이미지는 컨테이너 내 수직 중앙 정렬
   const imgBottom = cTop + (cH + renderedH) / 2;
-  elPnameWrap.style.top = (imgBottom - 3) + 'px';
+  elPnameWrap.style.top = (imgBottom - 12) + 'px';
 }
 
 function loadImg(e) {
