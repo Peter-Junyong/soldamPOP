@@ -217,6 +217,47 @@ select option { background: #161b27; }
   white-space: nowrap;
 }
 
+/* 1+1 전용: "2개" 텍스트 */
+.el-1plus1 {
+  position: absolute;
+  top: 68%; height: 10%;
+  left: 6%; right: 6%;
+  display: flex; align-items: center; justify-content: flex-start;
+  z-index: 10;
+}
+.el-1plus1-badge {
+  font-size: clamp(22px, 7vw, 56px);
+  font-weight: 900; color: #FFCD00;
+  letter-spacing: -.02em;
+}
+
+/* 2+1 전용: 1개/3개 가격 */
+.el-2plus1 {
+  position: absolute;
+  top: 68%; bottom: 2.5%;
+  left: 6%; right: 6%;
+  display: flex; flex-direction: column; justify-content: center; gap: 1%;
+  z-index: 10;
+}
+.el-2plus1-row {
+  display: flex; align-items: baseline; gap: 2%;
+}
+.el-2plus1-label {
+  font-size: clamp(12px, 3.2vw, 26px);
+  font-weight: 700; color: rgba(255,255,255,.8);
+  white-space: nowrap; min-width: 2em;
+}
+.el-2plus1-price {
+  font-size: clamp(22px, 7vw, 56px);
+  font-weight: 900; color: #FFCD00;
+  letter-spacing: -.04em; line-height: 1;
+}
+.el-2plus1-unit {
+  font-size: clamp(22px, 7vw, 56px);
+  font-weight: 900; color: #FFCD00;
+  letter-spacing: -.04em; line-height: 1;
+}
+
 /* 판매가 - 우측정렬, 숫자와 '원' 동일 폰트 */
 .el-price {
   position: absolute;
@@ -297,6 +338,10 @@ select option { background: #161b27; }
       <input type="number" id="i-disc" placeholder="자동" min="1" max="99" oninput="render()">
     </div>
     <div class="disc-auto" id="disc-auto"></div>
+    <div id="price3-sec" style="display:none">
+      <label>3개 가격 (원)</label>
+      <input type="number" id="i-price3" placeholder="3개 묶음 가격" oninput="render()">
+    </div>
   </div>
 
   <button class="btn-dl" id="btn-dl" onclick="dlPNG()">⬇ PNG 다운로드</button>
@@ -332,11 +377,28 @@ select option { background: #161b27; }
       </div>
     </div>
 
+    <div class="el-1plus1" id="el-1plus1-wrap" style="display:none">
+      <span class="el-1plus1-badge">2개</span>
+    </div>
+
+    <div class="el-2plus1" id="el-2plus1-wrap" style="display:none">
+      <div class="el-2plus1-row">
+        <span class="el-2plus1-label">1개</span>
+        <span class="el-2plus1-price" id="el-2p1-price1">—</span>
+        <span class="el-2plus1-unit">원</span>
+      </div>
+      <div class="el-2plus1-row">
+        <span class="el-2plus1-label">3개</span>
+        <span class="el-2plus1-price" id="el-2p1-price3">—</span>
+        <span class="el-2plus1-unit">원</span>
+      </div>
+    </div>
+
     <div class="el-orig" id="el-orig-wrap">
       <span id="el-orig">정상가 2,380원</span>
     </div>
 
-    <div class="el-price">
+    <div class="el-price" id="el-price-wrap">
       <span class="el-price-num" id="el-price">1,490</span>
       <span class="el-price-unit">원</span>
     </div>
@@ -420,25 +482,43 @@ function render() {
   const s = document.getElementById('i-sale').value;
   document.getElementById('el-price').textContent = s ? fmt(s) : '—';
 
-  const o = document.getElementById('i-orig').value;
-  if (o && parseInt(o) > 0) {
-    document.getElementById('el-orig').textContent = '정상가 ' + fmt(o) + '원';
-    show(document.getElementById('el-orig-wrap'), true);
-  } else {
-    show(document.getElementById('el-orig-wrap'), false);
-  }
+  const is1p1 = promo === '1+1';
+  const is2p1 = promo === '2+1';
 
-  const d = getDisc();
-  if (d) {
-    document.getElementById('el-off').textContent = d + '% OFF';
-    show(document.getElementById('el-off-wrap'), true);
-    const isAuto = !document.getElementById('i-disc').value;
-    const info = document.getElementById('disc-auto');
-    info.textContent = isAuto ? '자동: ' + d + '% 할인' : '';
-    show(info, isAuto);
-  } else {
+  show(document.getElementById('el-1plus1-wrap'), is1p1);
+  show(document.getElementById('el-2plus1-wrap'), is2p1);
+  show(document.getElementById('el-price-wrap'), !is2p1);
+  show(document.getElementById('price3-sec'), is2p1);
+
+  if (is1p1 || is2p1) {
     show(document.getElementById('el-off-wrap'), false);
     show(document.getElementById('disc-auto'), false);
+    show(document.getElementById('el-orig-wrap'), false);
+    if (is2p1) {
+      const p3 = document.getElementById('i-price3').value;
+      document.getElementById('el-2p1-price1').textContent = s ? fmt(s) : '—';
+      document.getElementById('el-2p1-price3').textContent = p3 ? fmt(p3) : '—';
+    }
+  } else {
+    const o = document.getElementById('i-orig').value;
+    if (o && parseInt(o) > 0) {
+      document.getElementById('el-orig').textContent = '정상가 ' + fmt(o) + '원';
+      show(document.getElementById('el-orig-wrap'), true);
+    } else {
+      show(document.getElementById('el-orig-wrap'), false);
+    }
+    const d = getDisc();
+    if (d) {
+      document.getElementById('el-off').textContent = d + '% OFF';
+      show(document.getElementById('el-off-wrap'), true);
+      const isAuto = !document.getElementById('i-disc').value;
+      const info = document.getElementById('disc-auto');
+      info.textContent = isAuto ? '자동: ' + d + '% 할인' : '';
+      show(info, isAuto);
+    } else {
+      show(document.getElementById('el-off-wrap'), false);
+      show(document.getElementById('disc-auto'), false);
+    }
   }
 
   const pname = document.getElementById('i-name').value.trim();
