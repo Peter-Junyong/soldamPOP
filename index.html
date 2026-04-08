@@ -251,7 +251,7 @@ select option { background: #161b27; }
     <div class="sec-lbl">프로모션 유형</div>
     <select id="i-promo" onchange="render()">
       <option>유통기한 임박 SALE</option>
-      <option>최저가 도전</option>
+      <option>특가 SALE</option>
       <option>1+1</option>
       <option>2+1</option>
     </select>
@@ -395,11 +395,11 @@ function render() {
 
   titleEl.textContent = promo;
 
-  const isLeftBig = ['1+1', '2+1', '최저가 도전'].includes(promo);
+  const isLeftBig = ['1+1', '2+1', '특가 SALE'].includes(promo);
   if (isLeftBig) {
     titleWrap.style.justifyContent = 'flex-start';
     titleWrap.style.paddingLeft = '6%';
-    titleEl.style.fontSize = 'clamp(24px, 8vw, 64px)';
+    titleEl.style.fontSize = 'clamp(36px, 12vw, 96px)';
     titleEl.style.textAlign = 'left';
   } else {
     titleWrap.style.justifyContent = '';
