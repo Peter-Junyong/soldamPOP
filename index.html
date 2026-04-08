@@ -145,6 +145,12 @@ select option { background: #161b27; }
   max-width: 100%;
 }
 
+/* 13.3" 전용 이미지 박스 */
+#pop[data-esl="13"] .el-product {
+  width: 52%;
+  top: 14%;
+}
+
 /* 상품 이미지 (흰카드 내부) */
 .el-product {
   position: absolute;
@@ -363,16 +369,7 @@ function changeESL() {
   pop.style.height = dispH + 'px';
   document.getElementById('esl-info').textContent = '출력 해상도: ' + label;
 
-  // 13.3"용 이미지 박스 별도 조정
-  const elProduct = document.getElementById('el-product');
-  if (key === '13') {
-    elProduct.style.width = '52%';
-    elProduct.style.top   = '14%';
-  } else {
-    elProduct.style.width = '';
-    elProduct.style.top   = '';
-  }
-
+  pop.dataset.esl = key;
   render();
   updatePnamePosition();
 }
