@@ -468,7 +468,9 @@ function updatePnamePosition() {
 
   // 이미지는 컨테이너 내 수직 중앙 정렬
   const imgBottom = cTop + (cH + renderedH) / 2;
-  elPnameWrap.style.top = (imgBottom - 32) + 'px';
+  const eslKey = document.getElementById('i-esl').value;
+  const offset = eslKey === '13' ? -32 : -12;
+  elPnameWrap.style.top = (imgBottom + offset) + 'px';
 }
 
 function loadImg(e) {
