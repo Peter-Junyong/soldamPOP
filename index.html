@@ -238,15 +238,20 @@ select option { background: #161b27; }
   z-index: 10;
   pointer-events: none;
 }
-.el-2p1-top {
+.el-2p1-r1-wrap {
   position: absolute;
   top: 67%; left: 6%; right: 6%;
-  display: flex; flex-direction: column; align-items: flex-end; gap: 1%;
+  display: flex; justify-content: flex-end;
 }
 .el-2p1-r1 {
-  font-size: clamp(8px, 2.2vw, 18px);
+  font-size: clamp(10px, 2.7vw, 22px);
   font-weight: 700; color: rgba(255,255,255,.9);
   white-space: nowrap;
+}
+.el-2p1-r2-wrap {
+  position: absolute;
+  top: 75%; left: 6%; right: 6%;
+  display: flex; justify-content: flex-end;
 }
 .el-2p1-r2 {
   font-size: clamp(22px, 7vw, 56px);
@@ -388,8 +393,10 @@ select option { background: #161b27; }
     </div>
 
     <div id="el-2plus1-wrap" style="display:none">
-      <div class="el-2p1-top">
+      <div class="el-2p1-r1-wrap">
         <div class="el-2p1-r1">1개&nbsp;<span id="el-2p1-price1">—</span>원</div>
+      </div>
+      <div class="el-2p1-r2-wrap">
         <div class="el-2p1-r2">3개</div>
       </div>
       <div class="el-2p1-r3-wrap">
