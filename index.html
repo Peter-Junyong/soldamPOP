@@ -24,20 +24,20 @@ body {
   overflow-y: auto;
 }
 .sb-title {
-  font-size: 10px; font-weight: 700; color: #FFCD00;
+  font-size: 12px; font-weight: 700; color: #FFCD00;
   letter-spacing: .15em; text-transform: uppercase;
   border-bottom: 1px solid #1e2533; padding-bottom: 10px;
 }
 .sec { display: flex; flex-direction: column; gap: 7px; }
 .sec-lbl {
-  font-size: 9px; font-weight: 700; color: #a0aec0;
+  font-size: 11px; font-weight: 700; color: #a0aec0;
   letter-spacing: .1em; text-transform: uppercase;
 }
-label { font-size: 11px; color: #cbd5e0; display: block; margin-bottom: 2px; }
+label { font-size: 13px; color: #cbd5e0; display: block; margin-bottom: 2px; }
 input, select {
   width: 100%; background: #161b27; border: 1px solid #1e2533;
   border-radius: 5px; padding: 7px 9px;
-  font-size: 13px; color: #fff; font-family: 'Pretendard', sans-serif;
+  font-size: 15px; color: #fff; font-family: 'Pretendard', sans-serif;
   outline: none; transition: border-color .15s;
 }
 input:focus, select:focus { border-color: #FFCD00; }
@@ -50,11 +50,11 @@ select option { background: #161b27; }
 }
 .upload:hover { border-color: #FFCD00; }
 .upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.upload-txt { font-size: 11px; color: #a0aec0; }
-.upload-hint { font-size: 10px; color: #718096; margin-top: 2px; }
+.upload-txt { font-size: 13px; color: #a0aec0; }
+.upload-hint { font-size: 12px; color: #718096; margin-top: 2px; }
 #prev-img { width: 100%; max-height: 100px; object-fit: contain; border-radius: 4px; display: none; }
-.btn-clr { font-size: 10px; color: #FFCD00; cursor: pointer; margin-top: 5px; display: none; background: none; border: none; font-family: inherit; }
-.disc-auto { font-size: 11px; color: #FFCD00; background: rgba(255,205,0,.08); border-radius: 4px; padding: 3px 8px; display: none; }
+.btn-clr { font-size: 12px; color: #FFCD00; cursor: pointer; margin-top: 5px; display: none; background: none; border: none; font-family: inherit; }
+.disc-auto { font-size: 13px; color: #FFCD00; background: rgba(255,205,0,.08); border-radius: 4px; padding: 3px 8px; display: none; }
 
 .btn-dl {
   width: 100%; padding: 11px; background: #FFCD00; color: #1a0040;
@@ -355,14 +355,7 @@ select option { background: #161b27; }
     </div>
   </div>
 
-  <div class="sec">
-    <div class="sec-lbl">다운로드 형식</div>
-    <select id="i-fmt" onchange="document.getElementById('btn-dl').textContent='⬇ '+this.value.toUpperCase()+' 다운로드'">
-      <option value="png">PNG</option>
-      <option value="bmp">BMP</option>
-    </select>
-  </div>
-  <button class="btn-dl" id="btn-dl" onclick="dlPNG()">⬇ PNG 다운로드</button>
+  <button class="btn-dl" id="btn-dl" onclick="dlPNG()">⬇ BMP 다운로드</button>
 </aside>
 
 <div class="preview">
@@ -647,7 +640,7 @@ function canvasToBMP(canvas) {
 }
 
 async function dlPNG() {
-  const fmt = document.getElementById('i-fmt').value;
+  const fmt = 'bmp';
   const btn = document.getElementById('btn-dl');
   btn.disabled = true; btn.textContent = '생성 중...';
   try {
@@ -709,8 +702,7 @@ async function dlPNG() {
     a.click();
     if (fmt === 'bmp') setTimeout(() => URL.revokeObjectURL(a.href), 10000);
   } catch(err) { alert('오류: ' + err.message); }
-  const fmt2 = document.getElementById('i-fmt').value;
-  btn.disabled = false; btn.textContent = '⬇ ' + fmt2.toUpperCase() + ' 다운로드';
+  btn.disabled = false; btn.textContent = '⬇ BMP 다운로드';
 }
 
 changeESL();  // 초기 사이즈 설정
