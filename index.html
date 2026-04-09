@@ -290,6 +290,13 @@ select option { background: #161b27; }
     <div class="disc-auto" id="disc-auto"></div>
   </div>
 
+  <div class="sec">
+    <div class="sec-lbl">다운로드 형식</div>
+    <select id="i-fmt" onchange="document.getElementById('btn-dl').textContent='⬇ '+this.value.toUpperCase()+' 다운로드'">
+      <option value="png">PNG</option>
+      <option value="bmp">BMP</option>
+    </select>
+  </div>
   <button class="btn-dl" id="btn-dl" onclick="dlPNG()">⬇ PNG 다운로드</button>
 </aside>
 
@@ -453,24 +460,114 @@ function clearImg(e) {
   render();
 }
 
+function canvasToBMP(canvas) {
+  const w = canvas.width, h = canvas.height;
+  const ctx = canvas.getContext('2d');
+  const imgData = ctx.getImageData(0, 0, w, h);
+  const data = imgData.data;
+  const rowSize = Math.floor((w * 3 + 3) / 4) * 4;
+  const pixelDataSize = rowSize * h;
+  const fileSize = 54 + pixelDataSize;
+  const buf = new ArrayBuffer(fileSize);
+  const view = new DataView(buf);
+  // BMP file header
+  view.setUint8(0, 0x42); view.setUint8(1, 0x4D); // 'BM'
+  view.setUint32(2, fileSize, true);
+  view.setUint32(6, 0, true); // reserved
+  view.setUint32(10, 54, true); // pixel data offset
+  // DIB header (BITMAPINFOHEADER)
+  view.setUint32(14, 40, true); // header size
+  view.setInt32(18, w, true);
+  view.setInt32(22, -h, true); // negative = top-down
+  view.setUint16(26, 1, true); // color planes
+  view.setUint16(28, 24, true); // bits per pixel
+  view.setUint32(30, 0, true); // no compression
+  view.setUint32(34, pixelDataSize, true);
+  view.setInt32(38, 2835, true); // x pixels per meter
+  view.setInt32(42, 2835, true); // y pixels per meter
+  view.setUint32(46, 0, true);
+  view.setUint32(50, 0, true);
+  // Pixel data (BGR)
+  let offset = 54;
+  for (let row = 0; row < h; row++) {
+    for (let col = 0; col < w; col++) {
+      const i = (row * w + col) * 4;
+      view.setUint8(offset++, data[i + 2]); // B
+      view.setUint8(offset++, data[i + 1]); // G
+      view.setUint8(offset++, data[i]);     // R
+    }
+    // row padding
+    const pad = rowSize - w * 3;
+    for (let p = 0; p < pad; p++) view.setUint8(offset++, 0);
+  }
+  return new Blob([buf], { type: 'image/bmp' });
+}
+
 async function dlPNG() {
+  const fmt = document.getElementById('i-fmt').value;
   const btn = document.getElementById('btn-dl');
   btn.disabled = true; btn.textContent = '생성 중...';
   try {
     const key = document.getElementById('i-esl').value;
     const { w, h } = ESL_SIZES[key];
     const pop = document.getElementById('pop');
-    const scale = w / pop.offsetWidth;  // 정확한 출력 해상도
+    const scale = w / pop.offsetWidth;
+
+    // Fix: html2canvas doesn't support object-fit:contain, so we temporarily
+    // set explicit pixel dimensions that match the rendered image
+    const elImg = document.getElementById('el-img');
+    const elProduct = document.getElementById('el-product');
+    let savedStyle = null;
+    if (imgSrc && elImg.naturalWidth && elImg.style.display !== 'none') {
+      const cW = elProduct.offsetWidth, cH = elProduct.offsetHeight;
+      const r = elImg.naturalWidth / elImg.naturalHeight;
+      const cr = cW / cH;
+      const dW = r >= cr ? cW : cH * r;
+      const dH = r >= cr ? cW / r : cH;
+      savedStyle = {
+        width: elImg.style.width, height: elImg.style.height,
+        objectFit: elImg.style.objectFit,
+        marginTop: elImg.style.marginTop, marginLeft: elImg.style.marginLeft,
+        position: elImg.style.position
+      };
+      elImg.style.width = dW + 'px';
+      elImg.style.height = dH + 'px';
+      elImg.style.objectFit = 'fill';
+      elImg.style.marginTop = ((cH - dH) / 2) + 'px';
+      elImg.style.marginLeft = ((cW - dW) / 2) + 'px';
+      elImg.style.position = 'relative';
+    }
+
     const canvas = await html2canvas(pop, {
       scale, useCORS: true, allowTaint: true, backgroundColor: null, logging: false
     });
-    const a = document.createElement('a');
+
+    // Restore original styles
+    if (savedStyle) {
+      elImg.style.width = savedStyle.width;
+      elImg.style.height = savedStyle.height;
+      elImg.style.objectFit = savedStyle.objectFit;
+      elImg.style.marginTop = savedStyle.marginTop;
+      elImg.style.marginLeft = savedStyle.marginLeft;
+      elImg.style.position = savedStyle.position;
+    }
+
     const nm = document.getElementById('i-promo').value.replace(/\s/g,'_');
     const eslLabel = document.getElementById('i-esl').options[document.getElementById('i-esl').selectedIndex].text.split('—')[0].trim();
-    a.download = '솔담_POP_' + nm + '_' + eslLabel + '_' + Date.now() + '.png';
-    a.href = canvas.toDataURL('image/png'); a.click();
+    const baseName = '솔담_POP_' + nm + '_' + eslLabel + '_' + Date.now();
+    const a = document.createElement('a');
+    if (fmt === 'bmp') {
+      a.download = baseName + '.bmp';
+      a.href = URL.createObjectURL(canvasToBMP(canvas));
+    } else {
+      a.download = baseName + '.png';
+      a.href = canvas.toDataURL('image/png');
+    }
+    a.click();
+    if (fmt === 'bmp') setTimeout(() => URL.revokeObjectURL(a.href), 10000);
   } catch(err) { alert('오류: ' + err.message); }
-  btn.disabled = false; btn.textContent = '⬇ PNG 다운로드';
+  const fmt2 = document.getElementById('i-fmt').value;
+  btn.disabled = false; btn.textContent = '⬇ ' + fmt2.toUpperCase() + ' 다운로드';
 }
 
 changeESL();  // 초기 사이즈 설정
