@@ -232,16 +232,19 @@ select option { background: #161b27; }
 }
 
 /* 2+1 전용 */
-.el-2plus1 {
+#el-2plus1-wrap {
   position: absolute;
-  top: 70%; bottom: 2.5%;
-  left: 6%; right: 6%;
-  display: flex; flex-direction: column; justify-content: flex-start;
-  align-items: flex-end; gap: 1%;
+  inset: 0;
   z-index: 10;
+  pointer-events: none;
+}
+.el-2p1-top {
+  position: absolute;
+  top: 67%; left: 6%; right: 6%;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 1%;
 }
 .el-2p1-r1 {
-  font-size: clamp(10px, 2.7vw, 22px);
+  font-size: clamp(8px, 2.2vw, 18px);
   font-weight: 700; color: rgba(255,255,255,.9);
   white-space: nowrap;
 }
@@ -249,6 +252,11 @@ select option { background: #161b27; }
   font-size: clamp(22px, 7vw, 56px);
   font-weight: 900; color: #FFCD00;
   letter-spacing: -.02em; line-height: 1;
+}
+.el-2p1-r3-wrap {
+  position: absolute;
+  top: 83.5%; bottom: 2.5%; left: 6%; right: 6%;
+  display: flex; align-items: center; justify-content: flex-end;
 }
 .el-2p1-r3 {
   font-size: clamp(28px, 9vw, 72px);
@@ -379,13 +387,13 @@ select option { background: #161b27; }
       <span class="el-1plus1-badge">2개</span>
     </div>
 
-    <div class="el-2plus1" id="el-2plus1-wrap" style="display:none">
-      <div class="el-2p1-r1">
-        <span>1개&nbsp;</span><span id="el-2p1-price1">—</span><span>원</span>
+    <div id="el-2plus1-wrap" style="display:none">
+      <div class="el-2p1-top">
+        <div class="el-2p1-r1">1개&nbsp;<span id="el-2p1-price1">—</span>원</div>
+        <div class="el-2p1-r2">3개</div>
       </div>
-      <div class="el-2p1-r2">3개</div>
-      <div class="el-2p1-r3">
-        <span id="el-2p1-price3">—</span><span>원</span>
+      <div class="el-2p1-r3-wrap">
+        <div class="el-2p1-r3"><span id="el-2p1-price3">—</span>원</div>
       </div>
     </div>
 
