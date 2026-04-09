@@ -220,9 +220,9 @@ select option { background: #161b27; }
 /* 1+1 전용: "2개" 텍스트 */
 .el-1plus1 {
   position: absolute;
-  top: 68%; height: 10%;
+  bottom: 16.5%;   /* 정상가 bottom(83.5%)에 맞춤 */
   left: 6%; right: 6%;
-  display: flex; align-items: center; justify-content: flex-end;
+  display: flex; align-items: flex-end; justify-content: flex-end;
   z-index: 10;
 }
 .el-1plus1-badge {
@@ -231,20 +231,21 @@ select option { background: #161b27; }
   letter-spacing: -.04em; line-height: 1;
 }
 
-/* 2+1 전용: 1개/정상가/3개 가격 */
+/* 2+1 전용: 1개/판매가/3개 가격 */
 .el-2plus1 {
   position: absolute;
-  top: 68%; bottom: 2.5%;
+  top: 77.5%; bottom: 2.5%;
   left: 6%; right: 6%;
-  display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 1%;
+  display: flex; flex-direction: column; justify-content: flex-start;
+  align-items: flex-end; gap: 0.5%;
   z-index: 10;
 }
 .el-2plus1-row {
   display: flex; align-items: baseline; justify-content: flex-end; gap: 2%;
 }
 .el-2plus1-label {
-  font-size: clamp(12px, 3.2vw, 26px);
-  font-weight: 700; color: rgba(255,255,255,.8);
+  font-size: clamp(13px, 3.4vw, 27px);
+  font-weight: 700; color: rgba(255,255,255,.85);
   white-space: nowrap;
 }
 .el-2plus1-price {
@@ -253,7 +254,7 @@ select option { background: #161b27; }
   letter-spacing: -.04em; line-height: 1;
 }
 .el-2plus1-price-sm {
-  font-size: clamp(14px, 4vw, 32px);
+  font-size: clamp(13px, 3.4vw, 27px);
   font-weight: 900; color: #FFCD00;
   letter-spacing: -.04em; line-height: 1;
 }
@@ -263,17 +264,9 @@ select option { background: #161b27; }
   letter-spacing: -.04em; line-height: 1;
 }
 .el-2plus1-unit-sm {
-  font-size: clamp(14px, 4vw, 32px);
+  font-size: clamp(13px, 3.4vw, 27px);
   font-weight: 900; color: #FFCD00;
   letter-spacing: -.04em; line-height: 1;
-}
-.el-2plus1-orig {
-  font-size: clamp(10px, 2.7vw, 21px);
-  font-weight: 700; color: rgba(255,255,255,.85);
-  text-decoration: line-through;
-  text-decoration-color: rgba(255,205,0,.8);
-  text-decoration-thickness: 2px;
-  white-space: nowrap;
 }
 
 /* 판매가 - 우측정렬, 숫자와 '원' 동일 폰트 */
@@ -402,11 +395,10 @@ select option { background: #161b27; }
     <div class="el-2plus1" id="el-2plus1-wrap" style="display:none">
       <div class="el-2plus1-row">
         <span class="el-2plus1-label">1개</span>
-        <span class="el-2plus1-price-sm" id="el-2p1-price1">—</span>
-        <span class="el-2plus1-unit-sm">원</span>
       </div>
       <div class="el-2plus1-row">
-        <span class="el-2plus1-orig" id="el-2p1-orig"></span>
+        <span class="el-2plus1-price-sm" id="el-2p1-price1">—</span>
+        <span class="el-2plus1-unit-sm">원</span>
       </div>
       <div class="el-2plus1-row">
         <span class="el-2plus1-label">3개</span>
@@ -516,10 +508,8 @@ function render() {
     show(document.getElementById('disc-auto'), false);
     show(document.getElementById('el-orig-wrap'), false);
     if (is2p1) {
-      const o2 = document.getElementById('i-orig').value;
       const p3 = document.getElementById('i-price3').value;
       document.getElementById('el-2p1-price1').textContent = s ? fmt(s) : '—';
-      document.getElementById('el-2p1-orig').textContent = o2 && parseInt(o2) > 0 ? '정상가 ' + fmt(o2) + '원' : '';
       document.getElementById('el-2p1-price3').textContent = p3 ? fmt(p3) : '—';
     }
   } else {
