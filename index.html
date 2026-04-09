@@ -231,41 +231,28 @@ select option { background: #161b27; }
   letter-spacing: -.04em; line-height: 1;
 }
 
-/* 2+1 전용: 1개/판매가/3개 가격 */
+/* 2+1 전용 */
 .el-2plus1 {
   position: absolute;
-  top: 75%; bottom: 2.5%;
+  top: 70%; bottom: 2.5%;
   left: 6%; right: 6%;
   display: flex; flex-direction: column; justify-content: flex-start;
-  align-items: flex-end; gap: 0.5%;
+  align-items: flex-end; gap: 1%;
   z-index: 10;
 }
-.el-2plus1-row {
-  display: flex; align-items: baseline; justify-content: flex-end; gap: 2%;
-}
-.el-2plus1-label {
-  font-size: clamp(13px, 3.4vw, 27px);
-  font-weight: 700; color: rgba(255,255,255,.85);
+.el-2p1-r1 {
+  font-size: clamp(10px, 2.7vw, 22px);
+  font-weight: 700; color: rgba(255,255,255,.9);
   white-space: nowrap;
 }
-.el-2plus1-price {
+.el-2p1-r2 {
+  font-size: clamp(22px, 7vw, 56px);
+  font-weight: 900; color: #FFCD00;
+  letter-spacing: -.02em; line-height: 1;
+}
+.el-2p1-r3 {
   font-size: clamp(28px, 9vw, 72px);
   font-weight: 900; color: #FFCD00;
-  letter-spacing: -.04em; line-height: 1;
-}
-.el-2plus1-price-sm {
-  font-size: clamp(17px, 4.5vw, 36px);
-  font-weight: 900; color: rgba(255,255,255,.85);
-  letter-spacing: -.04em; line-height: 1;
-}
-.el-2plus1-unit {
-  font-size: clamp(28px, 9vw, 72px);
-  font-weight: 900; color: #FFCD00;
-  letter-spacing: -.04em; line-height: 1;
-}
-.el-2plus1-unit-sm {
-  font-size: clamp(17px, 4.5vw, 36px);
-  font-weight: 900; color: rgba(255,255,255,.85);
   letter-spacing: -.04em; line-height: 1;
 }
 
@@ -393,17 +380,12 @@ select option { background: #161b27; }
     </div>
 
     <div class="el-2plus1" id="el-2plus1-wrap" style="display:none">
-      <div class="el-2plus1-row">
-        <span class="el-2plus1-label">1개</span>
+      <div class="el-2p1-r1">
+        <span>1개&nbsp;</span><span id="el-2p1-price1">—</span><span>원</span>
       </div>
-      <div class="el-2plus1-row">
-        <span class="el-2plus1-price-sm" id="el-2p1-price1">—</span>
-        <span class="el-2plus1-unit-sm">원</span>
-      </div>
-      <div class="el-2plus1-row">
-        <span class="el-2plus1-label">3개&nbsp;</span>
-        <span class="el-2plus1-price" id="el-2p1-price3">—</span>
-        <span class="el-2plus1-unit">원</span>
+      <div class="el-2p1-r2">3개</div>
+      <div class="el-2p1-r3">
+        <span id="el-2p1-price3">—</span><span>원</span>
       </div>
     </div>
 
